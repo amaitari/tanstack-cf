@@ -1,7 +1,7 @@
 import { join } from "node:path";
-import { defineConfig } from "@tanstack/start/config";
+import { defineConfig } from "@tanstack/react-start/config";
 import type { App } from "vinxi";
-import { cloudflare } from 'unenv'
+import { cloudflare } from "unenv";
 import { parseEnv } from "./app/lib/env";
 import { getCloudflareProxyEnv, isInCloudflareCI } from "./app/lib/cloudflare";
 
@@ -21,17 +21,17 @@ const app = defineConfig({
 });
 
 async function proxyCloudflareEnv() {
-  if (isInCloudflareCI()) return undefined;
+  if (isInCloudflareCI()) {
+    return undefined;
+  }
 
   const env = await getCloudflareProxyEnv();
 
-  const viteDefine = Object.fromEntries(
+  return Object.fromEntries(
     Object.entries(env)
       .filter(([key]) => key.startsWith("VITE_"))
       .map(([key, value]) => [`import.meta.env.${key}`, `"${value}"`])
   );
-
-  return viteDefine;
 }
 
 function withGlobalMiddleware(app: App) {
