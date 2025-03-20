@@ -17,6 +17,11 @@ const app = defineConfig({
   },
   vite: {
     define: await proxyCloudflareEnv(),
+    build: {
+      rollupOptions: {
+        external: ["node:async_hooks", "node:fs", "node:path"],
+      },
+    },
   },
 });
 
@@ -50,4 +55,4 @@ function withGlobalMiddleware(app: App) {
   };
 }
 
-export default withGlobalMiddleware(app);
+export default withGlobalMiddleware(await app);
